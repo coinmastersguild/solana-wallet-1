@@ -192,11 +192,14 @@ export default class SolanaLib {
   }
 
   private getConnection(chainId: string = 'solana:mainnet'): any {
-    let rpc = SOLANA_MAINNET_CHAINS[chainId]?.rpc || SOLANA_MAINNET_CHAINS['solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'].rpc
+    //let rpc = SOLANA_MAINNET_CHAINS[chainId]?.rpc || SOLANA_MAINNET_CHAINS['solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'].rpc
+    let rpc = null
     if (!rpc) {
       // rpc = 'https://solana-api.projectserum.com'
-      rpc = 'https://ssc-dao.genesysgo.net'
+      // rpc = 'https://ssc-dao.genesysgo.net'
       rpc = 'https://mainnet.helius-rpc.com/?api-key=25862a51-16e5-483f-aafc-e804084e8925'
+      // rpc = 'https://rpc.magicblock.app/mainnet'
+      // rpc = 'https://node1.bundlr.network'
     }
     return new Connection(rpc, 'confirmed')
   }

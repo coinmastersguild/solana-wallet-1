@@ -23,11 +23,11 @@ let run_test = async function () {
         console.log("CLUBMOON Token Balance:", tokenBalance)
 
         // get NFTs
-        let nfts = await wallet.getNfts("solana:mainnet")
-        console.log("NFT Count:", nfts.length)
-        nfts.forEach((nft, i) => {
-            console.log(`NFT #${i+1}: ${nft.name} (${nft.address.toBase58()})`)
-        })
+        // let nfts = await wallet.getNfts("solana:mainnet")
+        // console.log("NFT Count:", nfts.length)
+        // nfts.forEach((nft, i) => {
+        //     console.log(`NFT #${i+1}: ${nft.name} (${nft.address.toBase58()})`)
+        // })
 
         // Uncomment if you want to send SOL (ensure you have enough balance!)
         // let sendSolTx = await wallet.sendSol("5RU2erdSLHU8oVEFVK82KCoTSpZt7a6J6gyXcfRVUj5v", 0.0001, "solana:mainnet")
