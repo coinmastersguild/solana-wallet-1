@@ -276,7 +276,7 @@ export default class SolanaLib {
     const tx = new Transaction().add(instruction)
 
     if (useFeeBump) {
-      let priorityFeeMicroLamports = 2
+      let priorityFeeMicroLamports = 40000
       const setComputeUnitLimitIx = ComputeBudgetProgram.setComputeUnitLimit({ units: 1400000 })
       const setComputeUnitPriceIx = ComputeBudgetProgram.setComputeUnitPrice({ microLamports: priorityFeeMicroLamports })
       tx.add(setComputeUnitLimitIx)
@@ -287,7 +287,7 @@ export default class SolanaLib {
     tx.recentBlockhash = (await connection.getLatestBlockhash('finalized')).blockhash
     tx.sign(this.keypair)
 
-    const txid = await connection.sendRawTransaction(tx.serialize(), { skipPreflight: false })
+    const txid = await connection.sendRawTransaction(tx.serialize(), { skipPreflight: false, maxRetries: 10 })
     await connection.confirmTransaction(txid, 'confirmed')
     return txid
   }
