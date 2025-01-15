@@ -19,7 +19,10 @@ import bs58 from 'bs58'
 import nacl from 'tweetnacl'
 import bip39 from 'bip39'
 import { derivePath } from 'ed25519-hd-key'
-import { Metaplex } from '@metaplex-foundation/js'
+import { fetchAllDigitalAssetWithTokenByOwner } from "@metaplex-foundation/mpl-token-metadata";
+import { publicKey } from "@metaplex-foundation/umi";
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
+import { mplTokenMetadata } from '@metaplex-foundation/mpl-token-metadata'
 
 export const SOLANA_MAINNET_CHAINS: any = {
   'solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ': {
@@ -219,11 +222,61 @@ export default class SolanaLib {
     return amount
   }
 
-  public async getNfts(chainId: string = 'solana:mainnet'): Promise<any[]> {
-    const connection = this.getConnection(chainId)
-    const metaplex = Metaplex.make(connection)
-    const allNfts = await metaplex.nfts().findAllByOwner({ owner: this.keypair.publicKey })
-    return allNfts as any[]
+  public async getNfts(ownerAddress: string = '', chainId: string = 'solana:mainnet'): Promise<any[]> {
+    try {
+      if (!ownerAddress) {
+        ownerAddress = this.keypair.publicKey;
+      }
+
+      // Get RPC Endpoint
+      const endpoint = this.getConnection(chainId).rpcEndpoint()
+
+      // Create a UMI instance
+      const umi = createUmi(endpoint).use(mplTokenMetadata());
+
+      // The owner's public key
+      const ownerPublicKey = publicKey(ownerAddress);
+
+      const allTokens = await fetchAllDigitalAssetWithTokenByOwner(
+          umi,
+          ownerPublicKey,
+      );
+
+      const allNFTs = [];
+      allTokens.forEach((asset, index) => {
+        if (asset.metadata.collection.__option === "None") {
+          return;
+        }
+
+        allNFTs.push(asset);
+      });
+
+      return allNFTs as any[];
+    } catch (error) {
+      return [] as any[];
+    }
+  }
+
+  public async getNftCountByAddressAndCollection(
+      collectionAddress: string,
+      ownerAddress: string = '',
+      chainId: string = 'solana:mainnet'
+  ): Promise<number> {
+    try {
+      const nfts = await this.getNfts(ownerAddress, chainId);
+      const collectionNFTs = [];
+      nfts.forEach((nft, index) => {
+        if (nft.metadata.collection.value.key !== collectionAddress) {
+          return;
+        }
+
+        collectionNFTs.push(nft);
+      });
+
+      return collectionNFTs.length;
+    } catch (error) {
+      return 0;
+    }
   }
 
   public async sendSol(to: string, amountSol: number, chainId: string = 'solana:mainnet'): Promise<any> {
@@ -393,3 +446,4 @@ export default class SolanaLib {
     return incoming
   }
 }
+
