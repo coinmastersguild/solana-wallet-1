@@ -47,9 +47,12 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "^0.20.1",
+    "@metaplex-foundation/digital-asset-standard-api": "^1.0.4",
+    "@metaplex-foundation/mpl-token-metadata": "^3.3.0",
+    "@metaplex-foundation/umi": "^1.0.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.0.0",
     "@solana/spl-token": "^0.4.9",
-    "@solana/web3.js": "^1.95.8",
+    "@solana/web3.js": "^1.98.0",
     "bip39": "^3.1.0",
     "bs58": "^6.0.0",
     "dotenv": "^16.4.7",
