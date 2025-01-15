@@ -258,8 +258,8 @@ export default class SolanaLib {
   }
 
   public async getNftCountByAddressAndCollection(
-      ownerAddress: string,
       collectionAddress: string,
+      ownerAddress: string = '',
       chainId: string = 'solana:mainnet'
   ): Promise<number> {
     try {
